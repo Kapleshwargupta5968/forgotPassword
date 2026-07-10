@@ -1,5 +1,6 @@
 const userRepository = require("../repositories/user.repository");
 const { generateAccessToken, generateRefreshToken } = require("../utils/generateToken");
+const jwt = require("jsonwebtoken");
 
 /**
  * Creates a new user in the database.
@@ -70,3 +71,31 @@ exports.loginUser = async (data) => {
         };
     }
 }
+
+exports.refreshUserToken = async (refreshToken) => {
+    try {
+        if (!refreshToken) {
+            return { success: false, message: "No refresh token provided" };
+        }
+
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN);
+        
+        const user = await userRepository.findUserById(decoded.userId);
+        
+        if (!user) {
+            return { success: false, message: "User no longer exists" };
+        }
+        const payload = { userId: decoded.userId };
+        const newAccessToken = generateAccessToken(payload);
+        
+        return {
+            success: true,
+            accessToken: newAccessToken
+        };
+    } catch (error) {
+        return {
+            success: false,
+            message: "Invalid or expired refresh token"
+        };
+    }
+};

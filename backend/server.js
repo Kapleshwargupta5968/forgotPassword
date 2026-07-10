@@ -4,7 +4,7 @@ const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
-
+const cors = require("cors");
 const connectDB = require("./src/config/db");
 const userRoutes = require("./src/routes/userRoutes");
 const { errorHandler } = require("./src/middlewares/errorMiddleware");
@@ -18,6 +18,11 @@ connectDB();
 app.use(helmet());
 app.use(mongoSanitize());
 app.use(xss());
+
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true
+}));
 
 // Body parser & Cookie parser Middlewares
 app.use(express.json());

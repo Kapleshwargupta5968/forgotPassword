@@ -17,5 +17,16 @@ exports.createUser = async (data) => {
  * @returns {Promise<Object|null>} The user if found, or null.
  */
 exports.findUserByEmail = async (email) => {
-    return await User.findOne({ where: { email } });
+    // Fixed syntax for Mongoose (removed the 'where' wrapper)
+    return await User.findOne({ email });
+};
+
+/**
+ * Finds a user by their ID.
+ * 
+ * @param {string} id - The user ID to search for.
+ * @returns {Promise<Object|null>} The user if found, or null.
+ */
+exports.findUserById = async (id) => {
+    return await User.findById(id);
 };

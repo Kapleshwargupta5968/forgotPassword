@@ -45,3 +45,25 @@ exports.login = asyncHandler(async (req, res) => {
     
     return sendTokenResponse(result, res, 200);
 });
+
+exports.refresh = asyncHandler(async (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+    const result = await userService.refreshUserToken(refreshToken);
+    
+    if (!result.success) {
+        return res.status(401).json({ success: false, message: result.message });
+    }
+    
+    const cookieOptions = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+    };
+    
+    res.cookie("accessToken", result.accessToken, {
+        ...cookieOptions,
+        maxAge: 15 * 60 * 1000 
+    });
+
+    return res.status(200).json({ success: true, message: "Token refreshed" });
+});
