@@ -34,8 +34,13 @@ axiosInstance.interceptors.response.use(
         const status = error.response?.status || 500;
         const message = error.response?.data?.message || "Something went wrong. Please try again.";
 
+        // Do not attempt to refresh if the error came from login, signup, or refresh itself
+        const isAuthEndpoint = originalRequest.url?.includes('/auth/signin') || 
+                               originalRequest.url?.includes('/auth/signup') || 
+                               originalRequest.url?.includes('/auth/refresh');
+
         // If the error is 401 (Unauthorized) and we haven't tried to refresh yet
-        if (status === 401 && !originalRequest._retry) {
+        if (status === 401 && !originalRequest._retry && !isAuthEndpoint) {
             originalRequest._retry = true; // Mark as retried to prevent infinite loops
 
             try {

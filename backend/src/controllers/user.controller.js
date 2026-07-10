@@ -31,8 +31,11 @@ exports.signUp = asyncHandler(async (req, res) => {
     if (!result.success) {
         return res.status(400).json({ success: false, message: result.message });
     }
-    
-    return sendTokenResponse(result, res, 201);
+    return res.status(201).json({
+        success: true,
+        message: "User registered successfully. Please sign in.",
+        user: result.user
+    });
 });
 
 exports.login = asyncHandler(async (req, res) => {
@@ -66,4 +69,17 @@ exports.refresh = asyncHandler(async (req, res) => {
     });
 
     return res.status(200).json({ success: true, message: "Token refreshed" });
+});
+
+exports.logout = asyncHandler(async (req, res) => {
+    const cookieOptions = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+    };
+
+    res.clearCookie("accessToken", cookieOptions);
+    res.clearCookie("refreshToken", cookieOptions);
+
+    return res.status(200).json({ success: true, message: "Logged out successfully" });
 });
