@@ -30,3 +30,16 @@ exports.findUserByEmail = async (email) => {
 exports.findUserById = async (id) => {
     return await User.findById(id);
 };
+
+/**
+ * Finds a user by their reset password token if it hasn't expired.
+ * 
+ * @param {string} token - The hashed reset password token.
+ * @returns {Promise<Object|null>} The user if found, or null.
+ */
+exports.findUserByResetToken = async (token) => {
+    return await User.findOne({
+        resetPasswordToken: token,
+        resetPasswordExpires: { $gt: Date.now() }
+    });
+};

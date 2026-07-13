@@ -27,4 +27,22 @@ export const Signout = async () => {
     }catch(error){
         throw error;
     }
-};  
+};
+
+export const ForgotPassword = async (data) => {
+    try {
+        const response = await axiosInstance.post("/api/auth/forgot-password", data);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const ResetPassword = async (token, data) => {
+    try {
+        const response = await axiosInstance.put(`/api/auth/reset-password/${token}`, data);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};

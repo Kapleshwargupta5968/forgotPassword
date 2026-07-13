@@ -83,3 +83,36 @@ exports.logout = asyncHandler(async (req, res) => {
 
     return res.status(200).json({ success: true, message: "Logged out successfully" });
 });
+
+exports.forgotPassword = asyncHandler(async (req, res) => {
+    const { email } = req.body;
+    
+    if (!email) {
+        return res.status(400).json({ success: false, message: "Please provide an email" });
+    }
+
+    const result = await userService.forgotPassword(email);
+    
+    if (!result.success) {
+        return res.status(400).json({ success: false, message: result.message });
+    }
+
+    return res.status(200).json({ success: true, message: result.message });
+});
+
+exports.resetPassword = asyncHandler(async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    if (!password) {
+        return res.status(400).json({ success: false, message: "Please provide a new password" });
+    }
+
+    const result = await userService.resetPassword(token, password);
+    
+    if (!result.success) {
+        return res.status(400).json({ success: false, message: result.message });
+    }
+
+    return res.status(200).json({ success: true, message: result.message });
+});

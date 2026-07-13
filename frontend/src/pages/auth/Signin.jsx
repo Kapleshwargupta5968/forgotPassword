@@ -91,6 +91,12 @@ const Signin = () => {
                 }}
             />
 
+            <div className="flex items-center justify-end -mt-2 mb-2">
+                <Link to="/forgot-password" className="text-sm font-medium text-blue-600 hover:text-blue-500 transition-colors">
+                    Forgot your password?
+                </Link>
+            </div>
+
             <Button type="submit" isLoading={isSubmitting}>
                 Sign in
             </Button>

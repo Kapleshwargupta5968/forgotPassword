@@ -5,6 +5,8 @@ import './index.css'
 import App from './App.jsx'
 import Signin from "./pages/auth/Signin";
 import Signup from "./pages/auth/Signup";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import ResetPassword from "./pages/auth/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import { ProtectedRoute } from "./components/common/ProtectedRoute";
 import { PublicRoute } from "./components/common/PublicRoute";
@@ -37,6 +39,22 @@ const router = createBrowserRouter([
         element: (
           <PublicRoute>
             <Signup />
+          </PublicRoute>
+        )
+      },
+      {
+        path: "forgot-password",
+        element: (
+          <PublicRoute>
+            <ForgotPassword />
+          </PublicRoute>
+        )
+      },
+      {
+        path: "reset-password/:token",
+        element: (
+          <PublicRoute>
+            <ResetPassword />
           </PublicRoute>
         )
       },
