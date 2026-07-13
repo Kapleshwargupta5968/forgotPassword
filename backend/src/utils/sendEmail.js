@@ -10,24 +10,29 @@ const nodemailer = require("nodemailer");
  * @param {string} [options.html] - Email HTML content
  */
 const sendEmail = async (options) => {
-    // Create a transporter using standard SMTP (can be Gmail, Mailtrap, etc based on .env)
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.MAIL_USER,
-            pass: process.env.MAIL_PASS
-        }
-    });
+    try {
+        // Create a transporter using standard SMTP (can be Gmail, Mailtrap, etc based on .env)
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.MAIL_USER,
+                pass: process.env.MAIL_PASS
+            }
+        });
 
-    const mailOptions = {
-        from: `"${process.env.APP_NAME || 'Your App'}" <${process.env.MAIL_USER}>`,
-        to: options.email,
-        subject: options.subject,
-        text: options.message,
-        html: options.html
-    };
+        const mailOptions = {
+            from: `"${process.env.APP_NAME || 'Your App'}" <${process.env.MAIL_USER}>`,
+            to: options.email,
+            subject: options.subject,
+            text: options.message,
+            html: options.html
+        };
 
-    await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions);
+    } catch (error) {
+        console.error("Error sending email:", error);
+        throw error;
+    }
 };
 
 module.exports = sendEmail;
